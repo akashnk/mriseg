@@ -1,15 +1,17 @@
-clear;
-close all;
+
+function [Segout,finalImage] = myadcseg(fpadc,slice)
+
+
 fontSize = 10;
 % read analyze file
 % axial slices
-fp=fopen('../test/ADC.img');
-image =fread(fp,192*192*35,'*uint16');
+%fp=fopen('../test/ADC.img');
+image =fread(fpadc,192*192*35,'*uint16');
 c=reshape(image,192,192,35);
 
 
 % image adjustment and binarization
-gd=c(:,:,24);
+gd=c(:,:,slice);
 gd=squeeze(gd);
 gd=imadjust(gd);
 d=imrotate(gd,90,'bilinear','crop');
@@ -41,7 +43,7 @@ for i=1:192
     BWcor = imbinarize(dcor,level);
     BWcor = bwareaopen(BWcor, 10);
     for j=1:192
-        if BWcor(24,j)==1 && BW(i,j)==1
+        if BWcor(slice,j)==1 && BW(i,j)==1
             BWnew(i,j)=1;
         end
     end
@@ -57,7 +59,7 @@ for i=1:192
     BWsag = imbinarize(dsag,level);
     BWsag = bwareaopen(BWsag, 10);
     for j=1:192
-        if BWsag(24,j)==1 && BW(i,j)==1
+        if BWsag(slice,j)==1 && BW(i,j)==1
             BWnew(i,j)=1;
         end
     end
@@ -102,3 +104,4 @@ BWoutline = bwperim(BWstroke);
 Segout = finalImage; 
 Segout(BWoutline) = 65536; 
 figure,imshow(Segout);
+end

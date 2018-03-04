@@ -1,5 +1,4 @@
-clear all;
-close all;
+function nSegout = 
 fontSize = 10;
 fp=fopen('../test/PWIttp.img');
 image =fread(fp,128*128*35,'*uint16');
